@@ -2,13 +2,15 @@ import logging
 import os, time
 from dotenv import load_dotenv
 load_dotenv()
-from datetime import datetime
 
 from aiogram import Bot, Dispatcher, executor, types
 
 
-from model  import functions as func
+from model import timer_utils as tu
 from data import *
+from btns import *
+
+tu = tu.Timer()
 ## Bot Initialization
 bot = Bot(token=os.getenv("BOT_TOKEN"),parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot)
@@ -37,20 +39,29 @@ Commands:
         
 #================================== [Timer message handler] ==================================#
 @dp.message_handler(commands=['timer', 'get', 'cancel'])
-def timer(message: types.Message):
+async def timer(message: types.Message):
     
     # Command to set a timer
     if message.text.startswith("/timer"):
-        timer_info = message.text[6:].split(" ")
+        timer_info = message.text[7:].split(" ")
         if len(timer_info) < 2:
-            message.reply("<b>Please enter a valid time and message.</b>")
+            await message.reply("<b>Please enter a valid time and message.</b>")
             return
-        get_datetime = func.get_datetime(timer_info[0])
-        if not get_datetime:
-            message.reply("<b>Please enter a valid time.</b>")
-            return
+        response = tu.get_datetime(timer_info[0])
+        # Timer info
+        timer_to_set = tu.datetime_to_srt(response[0])
+        timer_message = timer_info[1]
+        timer_id = tu.gen_id()
+        target_id = message.from_user.id
+        tu.__init__(timer_to_set, timer_id, timer_message, target_id)
         
-            
+        
+        
+        response[1] += f"\nWith the message: <code>{timer_message}</code>?"
+        if type(response) != tuple:
+            await message.reply("<b>Please enter a valid time.</b>")
+            return
+        await message.reply(f"{response[1]}",reply_markup=timer_btn)
         
     
     # Command to get all the timers
@@ -60,6 +71,25 @@ def timer(message: types.Message):
     # Command to cancel a timer
     elif message.text.startswith("/cancel"):
         return "cancel"
+
+
+
+
+
+
+
+#================================== [Timer callback query handler] ==================================#
+@dp.callback_query_handler(text =  ["confirm_timer", "cancel_timer"])
+async def timer_callback(callback_query: types.CallbackQuery):
+    
+    if callback_query.data == "confirm_timer":
+        tu.add() # Add the timer to the database
+        await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, text="<b>Timer set!</b>")
         
+    elif callback_query.data == "cancel_timer":
+        await bot.edit_message_text(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id, text="<b>Timer cancelled!</b>")
+
+
+
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
