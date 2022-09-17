@@ -5,7 +5,9 @@ from datetime import datetime
 import data
 load_dotenv()
 
-from aiogram import Bot, Dispatcher, executor, types
+from aiogram import Bot, Dispatcher, types
+from aiogram.types import ChatType
+
 
 
 from model import timer_utils as tu
@@ -22,7 +24,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 
-@dp.message_handler(commands=['start', 'help'])
+@dp.message_handler(commands=['start', 'help'], chat_type=[ChatType.PRIVATE])
 async def start(message: types.Message):
     if message.text.startswith("/start"):
         await message.answer("Hello, I'm a timer bot! I can help you to set a timer for you. \nSend /help to see more info and the commands.")
@@ -30,7 +32,7 @@ async def start(message: types.Message):
         await message.answer( """
 Send me a message like this: <code>/timer 10m Homework</code>, and I will remind you in <b>10 minutes</b> for your <b>Homework</b>.
  
-You can also use <b>h</b> for hours,  <b>d</b> for days or even a time (eg: 12:19) in 24hrs format. For example: <code>/timer 1d 2h 3m</code> - alert in 1 day, 2 hours and 3 minutes.
+You can also use <b>h</b> for hours,  <b>d</b> for days or even a time (eg: 12:19) in 24hrs format. For example: <code>/timer 1d or 2h or 3m</code>.
 
 Commands:
 /start - Start the bot
@@ -41,7 +43,7 @@ Commands:
 /cancel - <code>id</code> Cancel the timer""")
         
 #================================== [Timer message handler] ==================================#
-@dp.message_handler(commands=['timer', 'get', 'cancel'])
+@dp.message_handler(commands=['timer', 'get', 'cancel'], chat_type=[ChatType.PRIVATE])
 async def timer(message: types.Message):
     
     # Command to set a timer
