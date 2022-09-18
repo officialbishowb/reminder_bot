@@ -12,7 +12,7 @@ class Database:
         """ Create the table if it doesn't exist 
         """
         self.cursor.execute("""
-        CREATE TABLE IF NOT EXISTS timers(
+        CREATE TABLE IF NOT EXISTS reminders(
             id INTEGER PRIMARY KEY,
             user_id INTEGER,
             alert_time TEXT,
@@ -22,20 +22,20 @@ class Database:
         """)
         self.db.commit()
     
-    def add(self, timer_id, user_id, alert_time, alert_message, target_id):
-        """ Add a timer to the database
+    def add(self, reminder_id, user_id, alert_time, alert_message, target_id):
+        """ Add a reminder to the database
         """
         self.cursor.execute("""
-        INSERT INTO timers(id, user_id, alert_time, alert_message, target_id) VALUES(?,?,?,?,?)
-        """, (timer_id, user_id, alert_time, alert_message, target_id))
+        INSERT INTO reminders(id, user_id, alert_time, alert_message, target_id) VALUES(?,?,?,?,?)
+        """, (reminder_id, user_id, alert_time, alert_message, target_id))
         self.db.commit()
     
     
     def delete(self, id):
-        """ Delete a timer from the database with the given id
+        """ Delete a reminder from the database with the given id
         """
         response = self.cursor.execute("""
-        DELETE FROM timers WHERE id=?
+        DELETE FROM reminders WHERE id=?
         """, (id,))
         self.db.commit()
         if response.rowcount:
@@ -44,29 +44,29 @@ class Database:
     
     
     def update(self, id, column, value):
-        """ Update a timer from the database with the given id
+        """ Update a reminder from the database with the given id
         """
         self.cursor.execute(f"""
-        UPDATE timers SET {column}=? WHERE id=?
+        UPDATE reminders SET {column}=? WHERE id=?
         """, (value, id))
         self.db.commit()
     
     
     def get(self,user_id):
-        """Get all timer from a user
+        """Get all reminder from a user
 
         Args:
             user_id (int): the user id (optional)
 
         Returns:
-            list: the list of timers
+            list: the list of reminders
         """
         if user_id != "":
             response = self.cursor.execute("""
-            SELECT * FROM timers WHERE user_id=?
+            SELECT * FROM reminders WHERE user_id=?
             """, (user_id,))
             return self.cursor.fetchall()
-        self.cursor.execute("""SELECT * FROM timers""",)
+        self.cursor.execute("""SELECT * FROM reminders""",)
         return self.cursor.fetchall()
             
     

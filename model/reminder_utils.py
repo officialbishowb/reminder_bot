@@ -1,24 +1,23 @@
-from datetime import  date, datetime, timedelta
-from typing import final
+from datetime import   datetime, timedelta
 from data import db_utils as db
 
 
-class Timer:
+class Reminder:
     
     def __init__(self) -> None:
-        self.timer_id = ""
+        self.reminder_id = ""
         self.user_id = ""
-        self.timer = ""
-        self.timer_message = ""
+        self.reminder = ""
+        self.reminder_message = ""
         self.target_id = ""
         self.db = db.Database()
         
         
-    def _timer_init(self, timer, user_id, timer_id, timer_message, target_id):
-        self.timer_id = timer_id
+    def _reminder_init(self, reminder, user_id, reminder_id, reminder_message, target_id):
+        self.reminder_id = reminder_id
         self.user_id = user_id
-        self.timer = timer
-        self.timer_message = timer_message
+        self.reminder = reminder
+        self.reminder_message = reminder_message
         self.target_id = target_id
         
         
@@ -37,23 +36,23 @@ class Timer:
         if "d" in raw_time:
             time = raw_time.replace("d", "")
             final_date = current_datetime + timedelta(days=float(time))
-            output_msg = f"Set the timer for <b>{time} days</b>?"
+            output_msg = f"Set the reminder for <b>{time} days</b>?"
         elif "h" in raw_time:
             time = raw_time.replace("h", "")
             final_date = current_datetime + timedelta(hours=float(time))
-            output_msg = f"Set the timer for <b>{time} hours</b>?"
+            output_msg = f"Set the reminder for <b>{time} hours</b>?"
         elif "m" in raw_time:
             time = raw_time.replace("m", "")
             final_date = current_datetime + timedelta(minutes=float(time))
-            output_msg = "Set the timer for <b>{time} minutes</b>?"
+            output_msg = "Set the reminder for <b>{time} minutes</b>?"
         elif ":" in raw_time:
             time = raw_time.split(":")
             if int(time[0]) < datetime.now().hour:
                 final_date = current_datetime.replace(days=1,hour=int(time[0]), minute=int(time[1]), second=0, microsecond=0)
-                output_msg = f"Set the timer for tommorrow at <b>{time[0]}hour and {time[1]}minute</b>?"
+                output_msg = f"Set the reminder for tommorrow at <b>{time[0]}hour and {time[1]}minute</b>?"
             else:
                 final_date = current_datetime.replace(hour=int(time[0]), minute=int(time[1]), second=0, microsecond=0)
-                output_msg = f"Set the timer for today at <b>{time[0]} hour and {time[1]} minutes</b>?"
+                output_msg = f"Set the reminder for today at <b>{time[0]} hour and {time[1]} minutes</b>?"
         else:
             return False
         return final_date, output_msg
@@ -84,9 +83,9 @@ class Timer:
 
     
     def add(self):
-        """Add the timer to the database
+        """Add the reminder to the database
         """
-        self.db.add(self.timer_id, self.user_id, self.timer, self.timer_message, self.target_id)
+        self.db.add(self.reminder_id, self.user_id, self.reminder, self.reminder_message, self.target_id)
     
     
     def gen_id(self):
