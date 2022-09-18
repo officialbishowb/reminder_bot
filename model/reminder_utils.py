@@ -33,7 +33,7 @@ class Reminder:
         
         current_datetime = datetime.now()
         output_msg = ""
-        print(raw_time)
+        print("Time:" + raw_time)
         if "d" in raw_time:
             time = raw_time.replace("d", "")
             final_date = current_datetime + timedelta(days=float(time))
