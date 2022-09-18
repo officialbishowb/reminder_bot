@@ -48,7 +48,7 @@ async def reminder(message: types.Message):
     
     # Command to set a reminder
     if message.text.startswith("/reminder"):
-        reminder_info = message.text[7:].split(" ", 1)
+        reminder_info = message.text[10:].split(" ", 1)
         if len(reminder_info) < 2:
             await message.reply("<b>Please enter a valid time and message.</b>")
             return
