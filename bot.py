@@ -14,7 +14,7 @@ from model import reminder_utils as tu
 from data import *
 from btns import *
 
-tu = tu.reminder()
+tu = tu.Reminder()
 db = Database()
 ## Bot Initialization
 bot = Bot(token=os.getenv("BOT_TOKEN"),parse_mode=types.ParseMode.HTML)
