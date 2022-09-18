@@ -113,7 +113,6 @@ async def reminder_notifier():
             alert_time = tu.str_to_datetime(reminder[2])
             current_time = tu.str_to_datetime(tu.datetime_to_str(datetime.now(tz)))
             target_id = reminder[4]
-            print(alert_time, current_time)
             if current_time >= alert_time:
                 await bot.send_message(target_id, f"⌛️ <b>Reminder Alert</b> ⌛️\n\n<code>{reminder[3]}</code>")
                 db.delete(reminder[0])
