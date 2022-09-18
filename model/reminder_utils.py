@@ -46,6 +46,8 @@ class Reminder:
             final_date = current_datetime + timedelta(minutes=float(time))
             output_msg = "Set the reminder for <b>{time} minutes</b>?"
         elif ":" in raw_time:
+            print("here")
+            print(raw_time)
             time = raw_time.split(":")
             if int(time[0]) <= datetime.now().hour & int(time[1]) < datetime.now().minute:
                 final_date = current_datetime.replace(days=1,hour=int(time[0]), minute=int(time[1]), second=0, microsecond=0)
