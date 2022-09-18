@@ -47,7 +47,7 @@ class Reminder:
             output_msg = "Set the reminder for <b>{time} minutes</b>?"
         elif ":" in raw_time:
             time = raw_time.split(":")
-            if int(time[0]) < datetime.now().hour:
+            if int(time[0]) <= datetime.now().hour & int(time[1]) < datetime.now().minute:
                 final_date = current_datetime.replace(days=1,hour=int(time[0]), minute=int(time[1]), second=0, microsecond=0)
                 output_msg = f"Set the reminder for tommorrow at <b>{time[0]}hour and {time[1]}minute</b>?"
             else:
