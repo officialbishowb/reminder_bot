@@ -53,6 +53,7 @@ async def reminder(message: types.Message):
             await message.reply("<b>Please enter a valid time and message.</b>")
             return
         response = tu.get_datetime(reminder_info[0])
+        print(response)
         if type(response) != tuple:
             await message.reply("<b>Invalid time. Please make sure the time format is valid!</b>")    
             return
