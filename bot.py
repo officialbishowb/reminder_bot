@@ -2,7 +2,7 @@ import logging
 import os
 from dotenv import load_dotenv
 from datetime import datetime
-import data
+import pytz
 load_dotenv()
 
 from aiogram import Bot, Dispatcher, types
@@ -10,11 +10,11 @@ from aiogram.types import ChatType
 
 
 
-from model import reminder_utils as tu
+from model import *
 from data import *
 from btns import *
 
-tu = tu.Reminder()
+tu = reminder_utils.Reminder()
 db = Database()
 ## Bot Initialization
 bot = Bot(token=os.getenv("BOT_TOKEN"),parse_mode=types.ParseMode.HTML)
@@ -22,7 +22,8 @@ dp = Dispatcher(bot)
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
-
+# Time zone
+tz = pytz.timezone('Europe/Vienna')
 
 @dp.message_handler(commands=['start', 'help'], chat_type=[ChatType.PRIVATE])
 async def start(message: types.Message):
@@ -110,7 +111,7 @@ async def reminder_notifier():
     if get_reminders:
         for reminder in get_reminders:
             alert_time = tu.str_to_datetime(reminder[2])
-            current_time = tu.str_to_datetime(tu.datetime_to_str(datetime.now()))
+            current_time = tu.str_to_datetime(tu.datetime_to_str(datetime.now(tz)))
             target_id = reminder[4]
             print(alert_time, current_time)
             if current_time >= alert_time:

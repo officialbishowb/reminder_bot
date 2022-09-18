@@ -1,6 +1,8 @@
 from datetime import   datetime, timedelta
 from data import db_utils as db
-
+import pytz
+# Time zone
+tz = pytz.timezone('Europe/Vienna')
 
 class Reminder:
     
@@ -95,5 +97,5 @@ class Reminder:
         Returns:
             str: The id
         """
-        return datetime.utcnow().strftime("%Y%m%d%H%M%S")
+        return datetime.utcnow(timezone=tz).strftime("%Y%m%d%H%M%S")
         
